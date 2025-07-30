@@ -2,6 +2,7 @@
   "name": "ai-power",
   "version": "0.1.0",
   "private": true,
+  "type": "module",
   "scripts": {
     "dev": "next dev --turbopack",
     "build": "next build",
@@ -34,7 +35,10 @@
     "remark-math": "^6.0.0",
     "replicate": "^1.0.1",
     "tailwind-merge": "^3.3.1",
-    "zod": "^4.0.11"
+    "zod": "^4.0.11",
+    "@azure-rest/ai-inference": "latest",
+    "@azure/core-auth": "latest",
+    "@azure/core-sse": "latest" 
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",

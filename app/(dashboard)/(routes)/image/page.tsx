@@ -10,13 +10,17 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import * as z from 'zod';
 import Empty from "@/components/Empty";
-import axios from 'axios';
+//import axios from 'axios';
 import Loader from "@/components/Loader";
-import { cn } from "@/lib/utils";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Card, CardFooter } from "@/components/ui/card";
-import Image from "next/image";
 import { Download } from "lucide-react";
+import axios from "axios";
+
+interface Image {
+    src: string;
+    url: string;
+}
 
 const ImagePage = () => {
   const router = useRouter();
@@ -26,22 +30,29 @@ const ImagePage = () => {
     defaultValues: {
       prompt: "",
       amount: "1",
-      aspect_ratio: '4:3',
+      resolution: '512x512',
     }
   });
 
   const pageInfo = tools.find(obj => obj.label === 'Image Generation');
-  const [images, setImages] = useState<string[]>([]);
+  const [images, setImages] = useState<Image[]>([]);
   const isLoading = form.formState.isSubmitting;
 
   const onSubmit = async(values: z.infer<typeof imageFormSchema>) => {
     try { 
       setImages([]);
 
-      const res = await axios.post('/api/image', values);
+      const res = await axios.post('/api/image', values)
 
-      const urls = res.data.map((img: { url: string }) => img.url);
+      if (!res) throw new Error('Failed to response.');
       
+      const urls = res.data[0].items.map((item: { image: string, image_resource_url: string}) => {
+        return {
+          src: `data:image/png;base64,${item.image}`,
+          url: item.image_resource_url
+        }
+      });
+
       setImages(urls);
 
       form.reset();
@@ -104,7 +115,7 @@ const ImagePage = () => {
                 </FormItem>
               )} />
 
-              <FormField name="aspect_ratio" control={form.control} render={({ field }) => (
+              <FormField name="resolution" control={form.control} render={({ field }) => (
                 <FormItem className="col-span-12 lg:col-span-2">
                   <Select
                     disabled={isLoading}
@@ -148,17 +159,17 @@ const ImagePage = () => {
           )}
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:gird-cols-4 gap-4 mt-8">
-            {images.map((src, idx) => (
+            {images.map(({ src, url }, idx) => (
               <Card
                 key={`${src}-${idx}`}
                 className="rounded-lg overflow-hidden"
               >
                 <div className="relative aspect-square">
-                  <Image src={src} alt={`Image-${idx}`} fill />
+                  <img src={src} alt={`image-${idx}`} />
                 </div>
 
                 <CardFooter className="p-2">
-                  <Button variant='secondary' className="w-full" onClick={() => window.open(src)}>
+                  <Button variant='secondary' className="w-full" onClick={() => window.open(url)}>
                     <Download className="w-4 h-4 mr-2" />
                     Download
                   </Button>

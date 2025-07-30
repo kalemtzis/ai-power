@@ -4,8 +4,8 @@ import OpenAI from "openai";
 import { ChatCompletionMessageParam } from "openai/resources";
 
 const openai = new OpenAI({
-  apiKey: process.env.OPENROUTER_API_KEY,
-  baseURL: 'https://openrouter.ai/api/v1'
+  apiKey: process.env.GITHUB_TOKEN,
+  baseURL: "https://models.github.ai/inference"
 });
 
 const instructionMessage: ChatCompletionMessageParam = {
@@ -29,7 +29,7 @@ export const POST = async (req: Request) => {
     );
 
     const res = await openai.chat.completions.create({
-      model: 'deepseek/deepseek-chat-v3-0324:free', 
+      model: 'openai/gpt-4.1', 
       messages: [instructionMessage, ...messages]
     });
 

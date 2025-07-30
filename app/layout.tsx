@@ -29,10 +29,6 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <Script
-          src="https://js.puter.com/v2/"
-          strategy="beforeInteractive" // or "afterInteractive", see below
-        />
         <ClerkProvider appearance={{ variables: { 'colorPrimary': '#c48827' } }}>
           {children}
         </ClerkProvider>

@@ -1,15 +1,20 @@
 import { auth } from '@clerk/nextjs/server';
 import { NextResponse } from 'next/server';
-import Replicate from 'replicate';
 
-const replicate = new Replicate({
-  auth: process.env.REPLICATE_API_TOKEN
-});
+/*
+const instructionMessage: ChatCompletionMessageParam = {
+  role: 'system',
+  content: `
+    You are an expert painter who generates beautiful pictures throw a text description.
+    You answer with an image url for purpose of using to src attribute of Image components.
+  `
+}
+*/
 
 export const POST = async (req: Request) => {
   try {
     const { userId } = await auth();
-    const { prompt, amount = "1", aspect_ratio = "4:3" } = await req.json();
+    const { prompt, amount = "1", resolution = "512x512" } = await req.json();
 
     if (!userId) return NextResponse.json(
       { error: "Unautherized" }, 
@@ -26,27 +31,31 @@ export const POST = async (req: Request) => {
       { status: 400 }
     );
 
-    if (!aspect_ratio) return NextResponse.json(
+    if (!resolution) return NextResponse.json(
       { error: "Aspect ratio required" }, 
       { status: 400 }
     );
-    
-/*
-    const res = await openai.images.generate({
-      model: 'deepseek/deepseek-r1:free',
-      prompt: prompt,
-      n: parseInt(amount),
-      size: resolution
+  
+    const res = await fetch('https://api.edenai.run/v2/image/generation/', {
+      method: 'POST',
+      headers: {
+        accept: 'application/json',
+        'content-type': 'application/json',
+        authorization: `Bearer ${process.env.EDENAI_API_TOKEN}`
+        //authorization: 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiOWJmMTI5MzUtZjc2Yy00MTVhLTgzNTQtNmQ5Zjk0NmMzYmU3IiwidHlwZSI6InNhbmRib3hfYXBpX3Rva2VuIn0.vwqM5KFFFBaezbAGNqKvh8ZGTeaC2IZnHTxrRJYRzCg'
+      },
+      body: JSON.stringify({
+        response_as_dict: false,
+        num_images: parseInt(amount),
+        providers: ['stabilityai'],
+        text: prompt,
+        resolution: resolution
+      })
     })
-*/
-    const input = {
-      prompt: prompt,
-      aspect_ratio: aspect_ratio,
-      num_outputs: amount
-    }
-    const res = await replicate.run('google/imagen-4', { input });
 
-    return NextResponse.json(res);
+    const json = await res.json()
+  
+    return NextResponse.json(json);
 
   } catch (error: any) {
     // TODO: Open Pro Modal

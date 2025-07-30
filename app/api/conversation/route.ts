@@ -3,8 +3,8 @@ import { NextResponse } from 'next/server';
 import { OpenAI } from 'openai';
 
 const openai = new OpenAI({
-  apiKey: process.env.OPENROUTER_API_KEY,
-  baseURL: 'https://openrouter.ai/api/v1'
+  apiKey: process.env.GITHUB_TOKEN,
+  baseURL: "https://models.github.ai/inference"
 })
 
 export const POST = async (req: Request) => {
@@ -23,7 +23,7 @@ export const POST = async (req: Request) => {
     );
 
     const res = await openai.chat.completions.create({
-      model: 'deepseek/deepseek-chat-v3-0324:free',
+      model: 'openai/gpt-4.1',
       messages: messages,
       temperature: 0.7,
     });

@@ -4,9 +4,9 @@ const nextConfig: NextConfig = {
   /* config options here */
   images: {
     domains: [
-      'oaidalleapiprodscus.blob.core.windows.net'
-    ]
-  }
+        'd14uq1pz7dzsdq.cloudfront.net'
+    ],
+  },
 };
 
 export default nextConfig;
