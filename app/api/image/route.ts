@@ -30,6 +30,7 @@ export const POST = async (req: Request) => {
       { error: "Aspect ratio required" }, 
       { status: 400 }
     );
+    
 /*
     const res = await openai.images.generate({
       model: 'deepseek/deepseek-r1:free',
@@ -40,10 +41,11 @@ export const POST = async (req: Request) => {
 */
     const input = {
       prompt: prompt,
-      aspect_ratio: aspect_ratio
+      aspect_ratio: aspect_ratio,
+      num_outputs: amount
     }
     const res = await replicate.run('google/imagen-4', { input });
-      
+
     return NextResponse.json(res);
 
   } catch (error: any) {
