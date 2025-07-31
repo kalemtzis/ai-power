@@ -1,10 +1,13 @@
 import { auth } from '@clerk/nextjs/server';
 import { NextResponse } from 'next/server';
-import Replicate from 'replicate';
+//import Replicate from 'replicate';
 
+/*
 const replicate = new Replicate({
-  auth: process.env.REPLICATE_API_TOKEN
+  auth: process.env.REPLICATE_API_KEY
+  
 })
+*/
 
 export const POST = async (req: Request) => {
   try {
@@ -20,12 +23,19 @@ export const POST = async (req: Request) => {
       { error: "Prompt is required" }, 
       { status: 400 }
     );
+    // TODO: Find an API
+/*
+    const res = await replicate.run('', {
+      input: {
+        prompt_a: prompt
+      }
+    })
 
-    const res = await replicate.run()
-
+    return NextResponse.json(res);
+*/
   } catch (error: any) {
     // TODO: Open Pro Modal
-    console.error('[CONVERSATION_ERROR]', error);
+    console.error('[MUSIC_ERROR]', error);
     return NextResponse.json(
       { error: 'Initial Server Error' }, 
       { status: 500 }

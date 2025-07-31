@@ -13,9 +13,9 @@ import Empty from "@/components/Empty";
 import axios from 'axios';
 import Loader from "@/components/Loader";
 
-const MusicPage = () => {
+const VideoPage = () => {
   const router = useRouter();
-  const [music, setMusic] = useState<string | undefined>("");
+  const [video, setVideo] = useState<string | undefined>("");
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -23,16 +23,16 @@ const MusicPage = () => {
       prompt: "",
     }
   });
-  const pageInfo = tools.find(obj => obj.label === 'Music Generation');
+  const pageInfo = tools.find(obj => obj.label === 'Video Generation');
   const isLoading = form.formState.isSubmitting;
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     try {
-      setMusic(undefined);
+      setVideo(undefined);
 
-      const res = await axios.post('/api/music', values);
+      const res = await axios.post('/api/video', values);
 
-      setMusic(res.data.audio);
+      setVideo(res.data[0]);
 
       form.reset();
     } catch (error) {
@@ -46,7 +46,7 @@ const MusicPage = () => {
     <div>
       <Heading 
         {...pageInfo!}
-        desciption="Turn your prompt into music."
+        desciption="Turn your prompt into a video."
       />
 
       <div className="px-4 lg:px-8">
@@ -62,7 +62,7 @@ const MusicPage = () => {
                     <Input 
                       className="border-0 outline-none focus-visible:ring-0 focus-visible:ring-transparent" 
                       disabled={isLoading} 
-                      placeholder="Piano solo" 
+                      placeholder="Clown fish swimming around a coral reef" 
                       {...field}
                     />
                   </FormControl>
@@ -81,14 +81,14 @@ const MusicPage = () => {
               <Loader />
             </div>
           )}
-          {!music && !isLoading && (
-            <Empty label="No Music generated." />
+          {!video && !isLoading && (
+            <Empty label="No Video generated." />
           )}
 
-          {music && (
-            <audio controls className="w-full mt-8">
-              <source src={music} />
-            </audio>
+          {video && (
+            <video className="w-full aspect-video mt-8 rounded-lg border bg-black" controls>
+              <source src={video} />
+            </video>
           )}
         </div>
       </div>
@@ -96,4 +96,4 @@ const MusicPage = () => {
   )
 }
 
-export default MusicPage
+export default VideoPage

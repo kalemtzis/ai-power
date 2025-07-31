@@ -117,11 +117,6 @@ export const tools = [
     color: 'text-pink-900',
     bgColor: 'bg-black/20'
   },
-  {
-    label: 'Settings',
-    icon: Settings,
-    href: '/settings',
-  },
 ];
 
 export const formSchema = z.object({
