@@ -164,3 +164,12 @@ export const resolutionOptions = [
     label: '1024x1024'
   },
 ]
+
+export const testimonials = [
+  {
+    name: "Vasilis",
+    avatar: "A",
+    title: 'Data / Software Engineer & ML',
+    description: "Best App!"
+  }
+]

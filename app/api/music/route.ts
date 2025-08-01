@@ -1,4 +1,4 @@
-import { checkApiLimit, increaseApiLimit } from '@/lib/apiLimit';
+import { checkApiLimit } from '@/lib/apiLimit';
 import { auth } from '@clerk/nextjs/server';
 import { NextResponse } from 'next/server';
 //import Replicate from 'replicate';
@@ -44,7 +44,7 @@ export const POST = async (req: Request) => {
 
     return NextResponse.json(res);
 */
-  } catch (error: any) {
+  } catch (error: unknown) {
     // TODO: Open Pro Modal
     console.error('[MUSIC_ERROR]', error);
     return NextResponse.json(

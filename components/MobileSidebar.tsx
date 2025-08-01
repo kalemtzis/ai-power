@@ -13,7 +13,7 @@ const MobileSidebar = ({ apiLimitCount = 0, isPro = false }: { apiLimitCount: nu
 
   useEffect(() => {
     setIsMounted(true);
-  })
+  }, [])
 
   if (!isMounted) return null;
   

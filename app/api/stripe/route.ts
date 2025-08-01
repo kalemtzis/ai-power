@@ -43,7 +43,7 @@ export const GET = async () => {
               name: "aiPowerPro",
               description: "Unlimited AI Generations",
             },
-            unit_amount: 1000,
+            unit_amount: 999,
             recurring: {
               interval: 'month'
             }

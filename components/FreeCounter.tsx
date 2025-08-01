@@ -13,7 +13,7 @@ const FreeCounter = ({ apiLimitCount = 0, isPro = false }: { apiLimitCount: numb
 
   useEffect(() => {
     setMounted(true);
-  });
+  }, []);
 
   if (!mounted) return null;
 

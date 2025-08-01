@@ -1,11 +1,6 @@
-import { checkApiLimit, increaseApiLimit } from "@/lib/apiLimit";
+import { checkApiLimit } from "@/lib/apiLimit";
 import { auth } from "@clerk/nextjs/server"
 import { NextResponse } from "next/server";
-import Replicate from 'replicate';
-
-const replicate = new Replicate({
-  auth: process.env.REPLICATE_API_KEY
-})
 
 export const POST = async (req: Request) => {
   try {
@@ -33,7 +28,7 @@ export const POST = async (req: Request) => {
 
     return NextResponse.json(res);
 */
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error("[VIDEO_ERROR]", error);
     return NextResponse.json({ error: 'Internal error' }, { status: 500 })
   }

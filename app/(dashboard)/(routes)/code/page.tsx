@@ -19,6 +19,7 @@ import { cn } from "@/lib/utils";
 import UserAvatar from "@/components/UserAvatar";
 import BotAvatar from "@/components/BotAvatar";
 import { useProModal } from "@/hooks/use-pro-modal";
+import toast from "react-hot-toast";
 
 const CodePage = () => {
   const proModal = useProModal();
@@ -49,9 +50,11 @@ const CodePage = () => {
       setMessages([...newMessages, res.data])
 
       form.reset();
-    } catch (error: any) {
-      if (error?.response?.status === 403) {
+    } catch (error: unknown) {
+      if (axios.isAxiosError(error) && error.response?.status === 403) {
         proModal.onOpen();
+      } else {
+        toast.error('Something went wrong.');
       }
     } finally {
       router.refresh();
@@ -112,15 +115,15 @@ const CodePage = () => {
               {message.role === 'user' ? <UserAvatar /> : <BotAvatar />}
               <ReactMarkdown
                 components={{
-                  pre: ({ node, ...props }) => (
+                  pre: ({ ...props }) => (
                     <div className="overflow-auto w-full my-2 bg-black/10 p-2 rounded-lg">
                       <pre {...props} />
                     </div>
                   ),
-                  code: ({ node, ...props }) => (
+                  code: ({ ...props }) => (
                     <code className="bg-black/10 rounded-lg p-1" {...props} />
                   ),
-                  div: ({ node, ...props }) => (
+                  div: () => (
                     <div className="text-sm overflow-hidden leading-7" />
                   )
                 }}

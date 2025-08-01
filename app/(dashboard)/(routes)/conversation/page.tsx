@@ -11,7 +11,6 @@ import { useForm } from "react-hook-form";
 import * as z from 'zod';
 import Empty from "@/components/Empty";
 import { ChatCompletionMessageParam } from 'openai/resources';
-import axios from 'axios';
 import ReactMarkdown from 'react-markdown';
 import remarkMath from 'remark-math';
 import rehypeKatex from 'rehype-katex';
@@ -21,6 +20,8 @@ import { cn } from "@/lib/utils";
 import UserAvatar from "@/components/UserAvatar";
 import BotAvatar from "@/components/BotAvatar";
 import { useProModal } from "@/hooks/use-pro-modal";
+import toast from "react-hot-toast";
+import axios from "axios";
 
 const ConversationPage = () => {
   const router = useRouter();
@@ -51,9 +52,11 @@ const ConversationPage = () => {
       setMessages([...newMessages, res.data])
 
       form.reset();
-    } catch (error: any) {
-      if (error?.response?.status === 403) {
+    } catch (error: unknown) {
+      if (axios.isAxiosError(error) && error.response?.status === 403) {
         proModal.onOpen();
+      } else {
+        toast.error('Something went wrong')
       }
     } finally {
       router.refresh();

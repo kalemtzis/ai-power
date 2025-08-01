@@ -8,8 +8,8 @@ import { Card } from './ui/card'
 import { cn } from '@/lib/utils'
 import { Check, Zap } from 'lucide-react'
 import { Button } from './ui/button'
-import { redirect } from 'next/navigation'
 import axios from 'axios'
+import toast from 'react-hot-toast'
 
 const ProModal = () => {
   const proModal = useProModal();
@@ -22,8 +22,8 @@ const ProModal = () => {
       const res = await axios.get('/api/stripe');
 
       window.location.href = res.data.url;
-    } catch (error) {
-      console.error(error, "STRIPE_CLIENT_ERROR")
+    } catch {
+      toast.error('Something went wrong');
     } finally {
       setLoading(false);
     }
@@ -71,6 +71,7 @@ const ProModal = () => {
             className='w-full cursor-pointer' 
             variant='premium'
             onClick={onSubscribe}
+            disabled={loading}
           >
             Upgrade
             <Zap className='w-4 h-4 ml-2 fill-white' />

@@ -17,6 +17,7 @@ import { Card, CardFooter } from "@/components/ui/card";
 import { Download } from "lucide-react";
 import axios from "axios";
 import { useProModal } from "@/hooks/use-pro-modal";
+import toast from "react-hot-toast";
 
 interface Image {
     src: string;
@@ -57,9 +58,11 @@ const ImagePage = () => {
       setImages(urls);
 
       form.reset();
-    } catch (error: any) {
-      if (error?.response?.status === 403) {
+    } catch (error: unknown) {
+      if (axios.isAxiosError(error) && error.response?.status === 403) {
         proModal.onOpen();
+      } else {
+        toast.error('Something went wrong.')
       }
     } finally {
       router.refresh();

@@ -16,8 +16,9 @@ export const POST = async (req: Request) => {
       signature,
       process.env.STRIPE_WEBHOOK_SECRET!,
     )
-  } catch (error: any) {
-    return new NextResponse(`Webook Error: ${error.message}`, { status: 400 });
+  } catch (error: unknown) {
+    const errorMessage = error instanceof Error ? error.message : "Unknown Webhook error"
+    return new NextResponse(`Webook Error: ${errorMessage}`, { status: 400 });
   }
 
   const session = event.data.object as Stripe.Checkout.Session;

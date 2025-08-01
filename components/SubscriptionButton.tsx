@@ -3,6 +3,7 @@ import React, { useState } from 'react'
 import { Button } from './ui/button'
 import { Zap } from 'lucide-react'
 import axios from 'axios'
+import toast from 'react-hot-toast'
 
 const SubscriptionButton = ({ isPro = false }: { isPro: boolean }) => {
   const [loading, setLoading] = useState(false);
@@ -14,15 +15,15 @@ const SubscriptionButton = ({ isPro = false }: { isPro: boolean }) => {
       const res = await axios.get('/api/stripe');
 
       window.location.href = res.data.url
-    } catch (error) {
-      console.error("BILLING_ERROR", error)
+    } catch {
+      toast.error('Something went wrong.')
     } finally {
       setLoading(false);
     }
   }
 
   return (
-    <Button disabled={loading} variant={isPro ? "default" : 'premium'} onClick={onClick}>
+    <Button disabled={loading} variant={isPro ? "default" : 'premium'} onClick={onClick} className='cursor-pointer'>
       {isPro ? "Manage Subscription" : "Upgrade"}
       {!isPro && <Zap className='w-4 h-4 ml-2 fill-white' />}
     </Button>

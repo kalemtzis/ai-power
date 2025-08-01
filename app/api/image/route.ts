@@ -67,7 +67,7 @@ export const POST = async (req: Request) => {
   
     return NextResponse.json(json);
 
-  } catch (error: any) {
+  } catch (error: unknown) {
     // TODO: Open Pro Modal
     console.error('[IMAGE_ERROR]', error);
     return NextResponse.json(

@@ -7,7 +7,7 @@ const ModalProvider = () => {
 
   useEffect(() => {
     SetMounted(true);
-  })
+  }, [])
 
   if (!mounted) return null;
 

@@ -20,7 +20,7 @@ export const POST = async (req: Request) => {
     const { messages } = await req.json();
     
     if (!userId) return NextResponse.json(
-      { error: "Unautherized" }, 
+      { error: "Unauthorized" }, 
       { status: 401 }
     );
 
@@ -44,11 +44,11 @@ export const POST = async (req: Request) => {
     await increaseApiLimit();
 
     return NextResponse.json(res.choices[0].message);
-  } catch (error: any) {
+  } catch (error: unknown) {
     // TODO: Open Pro Modal
     console.error('[CODE_ERROR]', error);
     return NextResponse.json(
-      { error: 'Initial Server Error' }, 
+      { error: 'Internal Server Error' }, 
       { status: 500 }
     )
   }

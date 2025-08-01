@@ -39,7 +39,7 @@ export const POST = async (req: Request) => {
 
     return NextResponse.json(res.choices[0].message)
 
-  } catch (error: any) {
+  } catch (error: unknown) {
     // TODO: Open Pro Modal
     console.error('[CONVERSATION_ERROR]', error);
     return NextResponse.json(
