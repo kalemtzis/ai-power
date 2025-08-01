@@ -7,14 +7,14 @@ import { redirect } from "next/navigation"
 
 const DashboardPage = () => {
   return (
-    <div>
+    <div className="flex flex-col min-h-screen scroll-smooth py-8">
       <div className="mb-8 space-y-4">
         <h2 className="text-2xl md:text-4xl font-bold text-center">Explore the power of AI</h2>
 
         <p className="text-muted-foreground font-light text-sm md:text-lg text-center">Chat with the smartest AI - Experience the power of AI</p>
       </div>
 
-      <div className="px-4 pd:px-20 lg:px-32 space-y-4">
+      <div className="px-4 pd:px-20 lg:px-32 space-y-4 flex-1 overflow-y-auto">
         {tools.map(({ label, href, color, bgColor, icon: Icon }) => (
           <Card
             onClick={() => redirect(href)}

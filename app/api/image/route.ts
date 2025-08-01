@@ -1,3 +1,4 @@
+import { checkApiLimit, increaseApiLimit } from '@/lib/apiLimit';
 import { auth } from '@clerk/nextjs/server';
 import { NextResponse } from 'next/server';
 
@@ -35,6 +36,13 @@ export const POST = async (req: Request) => {
       { error: "Aspect ratio required" }, 
       { status: 400 }
     );
+
+    const freeTrial = await checkApiLimit();
+
+    if (!freeTrial) return NextResponse.json(
+      { error: 'Free trial expired' },
+      { status: 403 }
+    )
   
     const res = await fetch('https://api.edenai.run/v2/image/generation/', {
       method: 'POST',
@@ -51,7 +59,9 @@ export const POST = async (req: Request) => {
         text: prompt,
         resolution: resolution
       })
-    })
+    });
+
+    await increaseApiLimit();
 
     const json = await res.json()
   

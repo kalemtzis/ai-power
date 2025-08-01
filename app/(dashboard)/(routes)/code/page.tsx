@@ -13,15 +13,15 @@ import Empty from "@/components/Empty";
 import { ChatCompletionMessageParam } from 'openai/resources';
 import axios from 'axios';
 import ReactMarkdown from 'react-markdown';
-import remarkMath from 'remark-math';
-import rehypeKatex from 'rehype-katex';
 import 'katex/dist/katex.min.css';
 import Loader from "@/components/Loader";
 import { cn } from "@/lib/utils";
 import UserAvatar from "@/components/UserAvatar";
 import BotAvatar from "@/components/BotAvatar";
+import { useProModal } from "@/hooks/use-pro-modal";
 
 const CodePage = () => {
+  const proModal = useProModal();
   const router = useRouter();
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -49,12 +49,10 @@ const CodePage = () => {
       setMessages([...newMessages, res.data])
 
       form.reset();
-    } catch (error) {
-      console.error(error);
-      setMessages(current => [
-        ...current,
-        { role: 'assistant', content: "Sorry, I couldn't generate a response. Please try again." }
-      ])
+    } catch (error: any) {
+      if (error?.response?.status === 403) {
+        proModal.onOpen();
+      }
     } finally {
       router.refresh();
     }

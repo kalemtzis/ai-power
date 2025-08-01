@@ -1,15 +1,15 @@
 'use client'
-
 import { routes } from "@/constants"
 import { cn } from "@/lib/utils"
 import { Montserrat } from "next/font/google"
 import Image from "next/image"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
+import FreeCounter from "./FreeCounter"
 
 const montserrat = Montserrat({ weight: "600", subsets: ['latin'] });
 
-const Sidebar = () => {
+const Sidebar = ({ apiLimitCount = 0, isPro = false }: { apiLimitCount: number, isPro: boolean }) => {
   const pathname = usePathname();
 
   return (
@@ -41,6 +41,8 @@ const Sidebar = () => {
           ))}
         </div>
       </div>
+
+      <FreeCounter apiLimitCount={apiLimitCount} isPro={isPro} />
     </div>
   )
 }

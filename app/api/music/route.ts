@@ -1,3 +1,4 @@
+import { checkApiLimit, increaseApiLimit } from '@/lib/apiLimit';
 import { auth } from '@clerk/nextjs/server';
 import { NextResponse } from 'next/server';
 //import Replicate from 'replicate';
@@ -23,6 +24,14 @@ export const POST = async (req: Request) => {
       { error: "Prompt is required" }, 
       { status: 400 }
     );
+
+    const freeTrial = await checkApiLimit();
+
+    if (!freeTrial) return NextResponse.json(
+      { error: 'Free trial expired.' },
+      { status: 403 }
+    )
+
     // TODO: Find an API
 /*
     const res = await replicate.run('', {
@@ -30,6 +39,8 @@ export const POST = async (req: Request) => {
         prompt_a: prompt
       }
     })
+
+    await increaseApiLimit();
 
     return NextResponse.json(res);
 */

@@ -1,6 +1,7 @@
 import { auth } from '@clerk/nextjs/server';
 import { NextResponse } from 'next/server';
 import { OpenAI } from 'openai';
+import { increaseApiLimit, checkApiLimit } from '@/lib/apiLimit';
 
 const openai = new OpenAI({
   apiKey: process.env.GITHUB_TOKEN,
@@ -22,11 +23,19 @@ export const POST = async (req: Request) => {
       { status: 400 }
     );
 
+    const freeTrial = await checkApiLimit();
+
+    if (!freeTrial) {
+      return NextResponse.json({ error: "Free Trial has expired." }, { status: 403 })
+    }
+
     const res = await openai.chat.completions.create({
       model: 'openai/gpt-4.1',
       messages: messages,
       temperature: 0.7,
     });
+
+    await increaseApiLimit();
 
     return NextResponse.json(res.choices[0].message)
 

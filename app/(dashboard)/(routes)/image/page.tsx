@@ -16,6 +16,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Card, CardFooter } from "@/components/ui/card";
 import { Download } from "lucide-react";
 import axios from "axios";
+import { useProModal } from "@/hooks/use-pro-modal";
 
 interface Image {
     src: string;
@@ -24,7 +25,7 @@ interface Image {
 
 const ImagePage = () => {
   const router = useRouter();
-
+  const proModal = useProModal();
   const form = useForm<z.infer<typeof imageFormSchema>>({
     resolver: zodResolver(imageFormSchema),
     defaultValues: {
@@ -56,8 +57,10 @@ const ImagePage = () => {
       setImages(urls);
 
       form.reset();
-    } catch (error) {
-      console.error(error);
+    } catch (error: any) {
+      if (error?.response?.status === 403) {
+        proModal.onOpen();
+      }
     } finally {
       router.refresh();
     }

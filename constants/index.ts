@@ -11,6 +11,8 @@ import {
 } from "lucide-react";
 import * as z from 'zod';
 
+export const MAX_FREE_COUNTS = 5;
+
 export const routes = [
   {
     label: 'Dashboard',

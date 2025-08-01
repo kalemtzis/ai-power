@@ -20,6 +20,7 @@ import Loader from "@/components/Loader";
 import { cn } from "@/lib/utils";
 import UserAvatar from "@/components/UserAvatar";
 import BotAvatar from "@/components/BotAvatar";
+import { useProModal } from "@/hooks/use-pro-modal";
 
 const ConversationPage = () => {
   const router = useRouter();
@@ -32,6 +33,7 @@ const ConversationPage = () => {
   const pageInfo = tools.find(obj => obj.label === 'Conversation');
   const isLoading = form.formState.isSubmitting;
   const [messages, setMessages] = useState<ChatCompletionMessageParam[]>([]);
+  const proModal = useProModal();
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     try {
@@ -49,12 +51,10 @@ const ConversationPage = () => {
       setMessages([...newMessages, res.data])
 
       form.reset();
-    } catch (error) {
-      console.error(error);
-      setMessages(current => [
-        ...current,
-        { role: 'assistant', content: "Sorry, I couldn't generate a response. Please try again." }
-      ])
+    } catch (error: any) {
+      if (error?.response?.status === 403) {
+        proModal.onOpen();
+      }
     } finally {
       router.refresh();
     }
